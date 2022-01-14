@@ -29,14 +29,16 @@ class UserProfile(AbstractBaseUser):
 class UserVerification(models.Model):
 
     otp = models.IntegerField()
+    
     created_on = models.DateTimeField(auto_now_add=True)
+    expires_on = models.DateTimeField(blank=True, null=True)
     user_id = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE)
 
+    # this field will track if the otp is valid or not.
     is_revoked = models.BooleanField(default=False)
 
 
     def __str__(self):
-
         return self.user_id.first_name
 
 

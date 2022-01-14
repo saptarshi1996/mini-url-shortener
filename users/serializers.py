@@ -5,6 +5,8 @@ from .models import UserProfile
 
 class RegisterSerializer(ModelSerializer):
 
+    email = EmailField()
+
     class Meta:
 
         model = UserProfile
