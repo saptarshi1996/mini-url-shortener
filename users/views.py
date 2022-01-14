@@ -8,7 +8,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import UserProfile, UserVerification
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import (
+    RegisterSerializer, 
+    LoginSerializer,
+    VerifyUserSerializer,
+)
 
 
 class LoginApiView(APIView):
@@ -75,7 +79,7 @@ class RegisterApiView(APIView):
                 email: str = request.data.get('email')
 
                 # check if the user already exists?
-                user_exists = UserProfile.objects.filter(email=email).first()
+                user_exists = UserProfile.objects.filter(email=email).only('id').first()
 
                 if user_exists:
 
@@ -106,6 +110,52 @@ class RegisterApiView(APIView):
 
             else:
 
+                return Response(data={
+                    "message": serializer.error_messages
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+
+            return Response(data={
+                "message": str(e),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+
+class VerifyUser(APIView):
+
+    def post(self, request):
+
+        # this will contain two params. otp: number, email: string
+
+        try:
+
+            serializer = VerifyUserSerializer(data=request.data)
+
+            if serializer.is_valid():
+
+                email, otp = request.data.get('email'), request.data.get('otp')
+
+                # check if the email exists.
+                user_exists = UserProfile.objects.filter(email=email).only('id', 'is_verified').first()
+
+                if not user_exists:
+                    return Response(data={
+                        "message": "User does not exists",
+                    },status=status.HTTP_404_NOT_FOUND)
+
+                if user_exists.is_verified:
+                    return Response(data={
+                        "message": "User already verified",
+                    },status=status.HTTP_400_BAD_REQUEST)
+
+                # verify the user.
+                UserVerification.objects.filter(user=user_exists, otp=otp).update(is_revoked=True)
+
+                return Response(data={
+                    "message": "User verified successfully",
+                }, status=status.HTTP_200_OK)
+            
+            else:
                 return Response(data={
                     "message": serializer.error_messages
                 }, status=status.HTTP_400_BAD_REQUEST)
