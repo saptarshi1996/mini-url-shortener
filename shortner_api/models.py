@@ -2,6 +2,7 @@ from django.db import models
 
 from users.models import UserProfile
 
+
 # Create your models here.
 class UserUrl(models.Model):
 
