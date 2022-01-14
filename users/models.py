@@ -40,13 +40,3 @@ class UserVerification(models.Model):
 
     def __str__(self):
         return self.user_id.first_name
-
-
-class ApiToken(models.Model):
-
-    api_token = models.CharField(max_length=20, unique=True)
-    user = models.ForeignKey(to=UserProfile, on_delete=models.CASCADE)
-    api_rate = models.IntegerField(default=100, blank=True,  null=True)
-
-    def __str__(self):
-        return self.user.first_name
