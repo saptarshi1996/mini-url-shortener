@@ -70,7 +70,7 @@ class ShortnerPostView(APIView):
 
                 # search for this key in cache. 
                 return Response(data={
-                    "message": "Done",
+                    "message": "New link saved successfully",
                     "url": key_base_url,
                 }, status=status.HTTP_201_CREATED)
 

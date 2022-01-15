@@ -14,26 +14,50 @@ const userLogin = (login: LoginInterface) => async (dispatchEvent: Dispatch) => 
 
     const { data }: AxiosResponse = await axiosUnauthPlugin.post('/auth/login', login);
 
-    const token = data.data.token;
+    const token = data.token;
     localStorage.setItem('token', `Token ${token}`);
 
     return dispatchEvent({
       type: authConstant.USER_LOGIN_SUCCESS,
-      data: {
-        loggedIn: true,
-        ...data.data,
-      }
+      loggedIn: true,
+      ...data,
     });
 
-  } catch (ex) {
-    return dispatchEvent({
-      type: authConstant.USER_LOGIN_FAILED,
-    });
+  } catch (ex: any) {
+    if (ex.response) {
+      return dispatchEvent({
+        type: authConstant.USER_LOGIN_FAILED,
+        ...ex.response.data,
+      });
+    } else {
+      return dispatchEvent({
+        type: authConstant.USER_LOGIN_FAILED,
+      });
+    }
   }
 }
 
-const userRegister = (register: RegisterInterface) => (dispatchEvent: Dispatch) => {
+const userRegister = (register: RegisterInterface) => async (dispatchEvent: Dispatch) => {
+  try {
 
+    const { data }: AxiosResponse = await axiosUnauthPlugin.post('/auth/register', register);
+    return dispatchEvent({
+      type: authConstant.USER_REGISTER_SUCCESS,
+      ...data,
+    });
+
+  } catch (ex: any) { 
+    if (ex.response) {
+      return dispatchEvent({
+        type: authConstant.USER_REGISTER_FAILED,
+        ...ex.response.data,
+      });
+    } else {
+      return dispatchEvent({
+        type: authConstant.USER_REGISTER_FAILED,
+      });
+    }
+  }
 }
 
 const userLogout = () => (dispatchEvent: Dispatch) => { 

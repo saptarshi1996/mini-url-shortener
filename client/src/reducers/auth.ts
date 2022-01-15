@@ -5,6 +5,8 @@ import { authConstant } from "../constants";
 const initialState: Object = {
   loading: false,
   loggedIn: localStorage.getItem('token') ? true : false,
+  message: '',
+  success: false,
 };
 
 export const authReducer = (state: Object = initialState, action: Action) => {
@@ -16,7 +18,8 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: false,
         loggedIn: true,
-        data: action,
+        ...action,
+        success: true,
       };
 
     case authConstant.USER_LOGIN_FAILED:
@@ -24,7 +27,8 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: false,
         loggedIn: false,
-        data: action,
+        ...action,
+        success: false,
       };
 
     case authConstant.USER_LOGIN_LOADING:
@@ -32,7 +36,7 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: true,
         loggedIn: false,
-        data: action,
+        ...action,
       };
 
     case authConstant.USER_LOGOUT_SUCCESS:
@@ -40,6 +44,26 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: false,
         loggedIn: false,
+        ...action,
+        message: '',
+      };
+
+    case authConstant.USER_REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loggedIn: false,
+        ...action,
+        success: true,
+      };
+
+    case authConstant.USER_REGISTER_FAILED:
+      return {
+        ...state,
+        loading: false,
+        loggedIn: false,
+        ...action,
+        success: false,
       };
 
     default:

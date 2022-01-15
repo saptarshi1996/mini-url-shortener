@@ -15,5 +15,6 @@ export interface RegisterInterface {
 export interface AlertProps {
   message: string;
   show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>
+  setShow: Dispatch<SetStateAction<boolean>>;
+  success: boolean;
 };

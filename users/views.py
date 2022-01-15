@@ -43,9 +43,7 @@ class LoginApiView(APIView):
                     token, _ = Token.objects.get_or_create(user=user_exists)
                     return Response(data={
                         "message": "User logged in successfully",
-                        "data": {
-                            "token": str(token)
-                        }
+                        "token": str(token),
                     }, status=status.HTTP_200_OK)
 
                 else:
@@ -57,7 +55,8 @@ class LoginApiView(APIView):
             else:
                 
                 return Response(data={
-                    "message": serializer.error_messages,
+                    "errors": serializer.error_messages,
+                    "message": "Validation failed",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
@@ -112,7 +111,8 @@ class RegisterApiView(APIView):
             else:
 
                 return Response(data={
-                    "message": serializer.error_messages
+                    "errors": serializer.error_messages,
+                    "message": "Validation failed",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
@@ -170,7 +170,8 @@ class VerifyUserAPIView(APIView):
                 
             else:
                 return Response(data={
-                    "message": serializer.error_messages
+                    "errors": serializer.error_messages,
+                    "message": "Validation failed",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
@@ -217,7 +218,8 @@ class ResendTokenAPIView(APIView):
                 
             else:
                 return Response(data={
-                    "message": serializer.error_messages
+                    "errors": serializer.error_messages,
+                    "message": "Validation failed",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:

@@ -3,6 +3,7 @@ import {
   useState,
   ChangeEvent,
   Dispatch,
+  useEffect,
 } from 'react';
 
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +17,6 @@ import {
   Card,
 } from "react-bootstrap";
 
-import { Navigate } from "react-router-dom";
-
 import { authActions } from "../actions";
 import { LoginInterface, AlertProps } from "../interfaces";
 import { AlertDismissible } from "../components";
@@ -27,12 +26,16 @@ export const Login: FunctionComponent = () => {
   const dispatch: Dispatch<any> = useDispatch();
   const selector: any = useSelector((state: any) => state.auth);
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   const [login, setLogin] = useState({
     email: '',
     password: '',
   } as LoginInterface);
+
+  useEffect(() => {
+    setShow(selector.message ? true : false);
+  }, [selector]);
 
   const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
 
@@ -51,14 +54,6 @@ export const Login: FunctionComponent = () => {
     await dispatch(authActions.userLogin(login));
   };
 
-  const AfterLoginNavigation = () => {
-    if (selector.loggedIn) {
-      return (
-        <Navigate to="/" />
-      )
-    } else { return null; }
-  }
-
   return (
     <>
       <Container style={{ paddingTop: "10%" }}>
@@ -73,9 +68,10 @@ export const Login: FunctionComponent = () => {
                 <hr />
 
                 <AlertDismissible {...{
-                  message: "login error",
+                  message: selector.message,
                   show: show,
                   setShow: setShow,
+                  success: selector.success,
                 }} />
 
                 <Form onSubmit={handleLoginFormSubmit}>
@@ -95,11 +91,6 @@ export const Login: FunctionComponent = () => {
                     </Button>
                   </Form.Group>
                 </Form>
-
-                <Card.Footer>
-
-                </Card.Footer>
-
               </Card.Body>
             </Card>
             <Row className="mt-2">

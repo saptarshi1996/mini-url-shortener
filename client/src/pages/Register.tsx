@@ -1,11 +1,12 @@
 import {
-  FunctionComponent,
   useState,
+  FunctionComponent,
   ChangeEvent,
   Dispatch,
+  useEffect,
 } from 'react';
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Form,
@@ -16,19 +17,26 @@ import {
   Card,
 } from "react-bootstrap";
 
+import { AlertDismissible } from "../components";
 import { authActions } from "../actions";
 import { RegisterInterface } from "../interfaces";
 
 export const Register: FunctionComponent = () => {
 
   const dispatch: Dispatch<any> = useDispatch();
+  const selector = useSelector((state: any) => state.auth);
 
+  const [show, setShow] = useState(false);
   const [register, setRegister] = useState({
     first_name: '',
     last_name: '',
     email: '',
     password: '',
   } as RegisterInterface);
+
+  useEffect(() => { 
+    setShow(selector.message ? true : false);
+  }, [selector]);
 
   const handleRegisterChange = (e: ChangeEvent<HTMLInputElement>) => {
 
@@ -42,9 +50,9 @@ export const Register: FunctionComponent = () => {
 
   };
 
-  const handleRegisterFormSubmit = (e: any) => {
+  const handleRegisterFormSubmit = async (e: any) => {
     e.preventDefault();
-    dispatch(authActions.userRegister(register));
+    await dispatch(authActions.userRegister(register));
   };
 
   return (
@@ -60,6 +68,13 @@ export const Register: FunctionComponent = () => {
                 </Card.Title>
 
                 <hr />
+
+                <AlertDismissible {...{
+                  message: selector.message,
+                  show: show,
+                  setShow: setShow,
+                  success: selector.success,
+                }} />
 
                 <Form onSubmit={handleRegisterFormSubmit}>
 
@@ -95,7 +110,7 @@ export const Register: FunctionComponent = () => {
             </Card>
             <Row className="mt-2">
               <Col lg="6">
-                <Button variant="danger" href="/auth/register">Login Here</Button>
+                <Button variant="danger" href="/auth/login">Login Here</Button>
               </Col>
               <Col lg="6" style={{ textAlign: "right" }}>
                 <Button variant="danger">Verify User</Button>
