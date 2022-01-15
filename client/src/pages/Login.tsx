@@ -47,12 +47,12 @@ export const Login: FunctionComponent = () => {
       [name]: value,
     });
 
-  };
+  }
 
   const handleLoginFormSubmit = async (e: any) => {
     e.preventDefault();
     await dispatch(authActions.userLogin(login));
-  };
+  }
 
   return (
     <>

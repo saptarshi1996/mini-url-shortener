@@ -48,12 +48,12 @@ export const Register: FunctionComponent = () => {
       [name]: value,
     });
 
-  };
+  }
 
   const handleRegisterFormSubmit = async (e: any) => {
     e.preventDefault();
     await dispatch(authActions.userRegister(register));
-  };
+  }
 
   return (
     <>
