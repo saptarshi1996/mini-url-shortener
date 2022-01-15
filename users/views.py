@@ -121,7 +121,7 @@ class RegisterApiView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
 
 
-class VerifyUser(APIView):
+class VerifyUserAPIView(APIView):
 
     def post(self, request):
 
@@ -149,12 +149,23 @@ class VerifyUser(APIView):
                     },status=status.HTTP_400_BAD_REQUEST)
 
                 # verify the user.
-                UserVerification.objects.filter(user=user_exists, otp=otp).update(is_revoked=True)
+
+                # check if verification exists
+                user_verification = UserVerification.objects.filter(user_id=user_exists, otp=otp).first()
+
+                if not user_verification:
+
+                    return Response(data={
+                        "message": "Invalid user verification",
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+                user_verification.is_revoked = True
+                user_verification.save()
 
                 return Response(data={
                     "message": "User verified successfully",
                 }, status=status.HTTP_200_OK)
-            
+                
             else:
                 return Response(data={
                     "message": serializer.error_messages
