@@ -29,6 +29,9 @@ class LoginSerializer(ModelSerializer):
 
 
 class VerifyUserSerializer(Serializer):
-
     email = EmailField()
     otp = IntegerField()
+
+
+class ResendTokenSerializer(Serializer):
+    email = EmailField()
