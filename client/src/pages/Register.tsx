@@ -16,6 +16,7 @@ import {
   Card,
 } from "react-bootstrap";
 
+import { authActions } from "../actions";
 import { RegisterInterface } from "../interfaces";
 
 export const Register: FunctionComponent = () => {
@@ -42,11 +43,8 @@ export const Register: FunctionComponent = () => {
   };
 
   const handleRegisterFormSubmit = (e: any) => {
-
     e.preventDefault();
-
-    const { first_name, last_name, email, password }: RegisterInterface = register;
-
+    dispatch(authActions.userRegister(register));
   };
 
   return (
@@ -56,9 +54,12 @@ export const Register: FunctionComponent = () => {
           <Col lg="5">
             <Card>
               <Card.Body>
+
                 <Card.Title className="text-center text-uppercase mt-2">
-                  Sign Up
+                  <h4>Sign Up</h4>
                 </Card.Title>
+
+                <hr />
 
                 <Form onSubmit={handleRegisterFormSubmit}>
 
@@ -83,7 +84,7 @@ export const Register: FunctionComponent = () => {
                   </Form.Group>
 
                   <Form.Group className="d-grid gap-2">
-                    <Button variant="primary" type="submit">
+                    <Button variant="danger" type="submit">
                       Register Here
                     </Button>
                   </Form.Group>
@@ -92,6 +93,14 @@ export const Register: FunctionComponent = () => {
 
               </Card.Body>
             </Card>
+            <Row className="mt-2">
+              <Col lg="6">
+                <Button variant="danger" href="/auth/register">Login Here</Button>
+              </Col>
+              <Col lg="6" style={{ textAlign: "right" }}>
+                <Button variant="danger">Verify User</Button>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Container>

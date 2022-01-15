@@ -8,6 +8,7 @@ const initialState: Object = {
 };
 
 export const authReducer = (state: Object = initialState, action: Action) => {
+  
   switch (action.type) {
 
     case authConstant.USER_LOGIN_SUCCESS:
@@ -15,6 +16,7 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: false,
         loggedIn: true,
+        data: action,
       };
 
     case authConstant.USER_LOGIN_FAILED:
@@ -22,6 +24,7 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: false,
         loggedIn: false,
+        data: action,
       };
 
     case authConstant.USER_LOGIN_LOADING:
@@ -29,9 +32,18 @@ export const authReducer = (state: Object = initialState, action: Action) => {
         ...state,
         loading: true,
         loggedIn: false,
+        data: action,
+      };
+
+    case authConstant.USER_LOGOUT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loggedIn: false,
       };
 
     default:
       return state;
+
   };
 };
