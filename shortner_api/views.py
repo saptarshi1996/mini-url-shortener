@@ -9,11 +9,19 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 from .models import UserUrl
+from .serializers import UserUrlSerializer
 
 env = environ.Env()
 environ.Env.read_env()
+
+
+# Custom pagination class.
+class UserLinkPagination(PageNumberPagination):
+    page_size = 10
+    # page_size_query_param = 'page'
 
 
 # Create your views here.
@@ -36,7 +44,7 @@ class ShortnerGetView(APIView):
         return redirect(env("NOT_FOUND_URL"))
 
 
-class ShortnerPostView(APIView):
+class ShortnerPostView(APIView, UserLinkPagination):
 
     permission_classes = (IsAuthenticated, )
 
@@ -44,7 +52,7 @@ class ShortnerPostView(APIView):
 
         try:
 
-            if 'value' in request.data:
+            if 'value' in request.data and request.data.get('value'):
 
                 base_url = env("PREFIX_URL")
                 key = str(uuid.uuid4())[:5]
@@ -70,11 +78,27 @@ class ShortnerPostView(APIView):
 
                 # search for this key in cache. 
                 return Response(data={
-                    "message": "New link saved successfully",
-                    "url": key_base_url,
+                    "message": "New link generated successfully",
                 }, status=status.HTTP_201_CREATED)
 
-            return Response(data={"message": "Missing credentials"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": "Missing value"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def get(self, request):
+
+        try:
+
+            user_url = UserUrl.objects.filter(user=request.user).only('id', 'original_url', 'short_url', 'clicks', 'created_at')
+            results = self.paginate_queryset(user_url, request, view=self)
+            serializer = UserUrlSerializer(results, many=True)
+            paginated_result = self.get_paginated_response(serializer.data).data
+
+            return Response(data={
+                "message": "User link fetched successfully",
+                "result": paginated_result,
+            }, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

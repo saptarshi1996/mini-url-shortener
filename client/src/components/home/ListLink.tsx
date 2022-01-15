@@ -1,44 +1,54 @@
 import { FunctionComponent } from "react";
 import { Form, ListGroup, Badge, Col, Row } from "react-bootstrap";
+import { IUserLink } from "../../interfaces";
 
 import { Paginator } from "../Paginator";
 
-export const ListLink: FunctionComponent = () => {
+export const ListLink: FunctionComponent = ({ userLinkList, paginationCursors }: any) => {
 
-  const getLinkDetails = (id: number) => { 
+  const listGroupEntries = [];
+
+  const getLinkDetails = (id: number) => {
     console.log(id);
+  }
+
+  const RenderListGroup = (props: any) => {
+    const userLinkList = props.userLinkList;
+    const listGroupItems = userLinkList.map((key: IUserLink, index: number) => {
+      return (<ListGroup.Item
+        key={index}
+        className="d-flex justify-content-between align-items-start"
+      >
+        <Form.Check
+          type="checkbox"
+          id={`checkbox-${index}`}
+          label=""
+          isInvalid
+        />
+        <div style={{ "cursor": "pointer" }} className="ms-2 me-auto">
+          <div className="fw-bold" style={{ "wordWrap": "break-word" }}>
+            {key.original_url && key.original_url.length > 100 ? key.original_url.substring(0, 100) + "..." : key.original_url}
+          </div>
+          <span className="fw-bold text-danger">{key.short_url}</span>
+        </div>
+        <Badge bg="danger" className="p-2" pill>
+          Clicks: {key.clicks}
+        </Badge>
+      </ListGroup.Item>
+      )
+    });
+
+    return (
+      <ListGroup>
+        {listGroupItems}
+      </ListGroup>
+    );
   }
 
   return (
     <>
-      <Paginator />
-      <ListGroup>
-        <ListGroup.Item
-          className="d-flex p-3 justify-content-between align-items-start"
-        >
-          <Form.Check 
-            type="checkbox"
-            id="custom-checkbox"
-            label=""
-            color="danger"
-            isInvalid
-          />
-          <Row onClick={(id) => getLinkDetails(12)} style={{ "cursor": "pointer" }}>
-            <Col lg="10">
-              <div className="ms-2 me-auto">
-                <div className="fw-bold">https://stackoverflow.com/questions/60444734/warning-functions-are-not-valid-as-a-react-child-this-may-happen-if-you-return</div>
-                <span className="fw-bold text-danger">http://localhost:8000/mus/sr/4393a6c1</span>
-              </div>
-
-            </Col>
-            <Col lg="2">
-              <Badge className="p-3" bg="danger" style={{ "fontSize": "15px" }}>
-                Clicks: 14
-              </Badge>
-            </Col>
-          </Row>
-        </ListGroup.Item>
-      </ListGroup>
+      <Paginator {...{ cursors: paginationCursors } as any} />
+      <RenderListGroup userLinkList={userLinkList} />
     </>
   );
 }

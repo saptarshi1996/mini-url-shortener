@@ -1,26 +1,33 @@
-import { Fragment, FunctionComponent, useState } from "react";
+import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import {
   Button,
   Modal,
   Form,
   FormGroup,
   FormControl,
-  Row,
-  Col,
 } from "react-bootstrap";
 
 import { useDispatch } from "react-redux";
+import { linkActions } from "../../actions";
 
-export const CreateLink: FunctionComponent = () => {
+export const CreateLink: FunctionComponent = ({ addLinkSuccess }: any) => {
 
   const dispatch = useDispatch();
 
   const [addLink, setAddLink] = useState('');
-
   const [createModal, setCreateModal] = useState(false);
 
+  useEffect(() => {
+
+    if (addLinkSuccess)
+      setCreateModal(false)
+
+  }, [addLinkSuccess]);
+
   const submitGenerateLink = async (e: any) => {
-    // await dispatch();
+    e.preventDefault();
+    await dispatch(linkActions.createNewLink(addLink));
+    await dispatch(linkActions.getUserLinkList());
   }
 
   return (
@@ -45,19 +52,18 @@ export const CreateLink: FunctionComponent = () => {
           </Modal.Header>
           <Modal.Body>
 
-            <Form onSubmit={submitGenerateLink}>
+            <Form>
               <FormGroup className="mb-3">
-                <FormControl onChange={(e: any) => setAddLink(e.target.value)} name="value" placeholder="Enter Link" />
+                <FormControl as="textarea" rows={3} onChange={(e: any) => setAddLink(e.target.value)} name="value" placeholder="Enter Link" />
               </FormGroup>
               <FormGroup className="mb-3">
-                <Button variant="danger">Generate Link</Button>
+                <Button type="button" onClick={submitGenerateLink} variant="danger">Generate Link</Button>
               </FormGroup>
             </Form>
 
           </Modal.Body>
         </Modal>
       </Fragment>
-
     </>
   );
 }
