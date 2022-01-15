@@ -7,6 +7,7 @@ const initialState: Object = {
   loggedIn: localStorage.getItem('token') ? true : false,
   message: '',
   success: false,
+  userDetails: null,
 };
 
 export const authReducer = (state: Object = initialState, action: Action) => {

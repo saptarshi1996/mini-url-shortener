@@ -35,3 +35,9 @@ class VerifyUserSerializer(Serializer):
 
 class ResendTokenSerializer(Serializer):
     email = EmailField()
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'first_name', 'last_name', 'email', 'is_verified']

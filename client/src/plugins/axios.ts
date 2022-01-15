@@ -9,10 +9,6 @@ const axiosUnauthPlugin = axios.default.create({
 
 const axiosAuthPlugin = axios.default.create({
   baseURL: 'http://localhost:8000',
-  headers: {
-    'content-type': 'application/json',
-    'Authorization': localStorage.getItem('token') as string,
-  }
 });
 
 export {

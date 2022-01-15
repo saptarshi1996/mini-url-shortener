@@ -47,7 +47,7 @@ class ShortnerPostView(APIView):
             if 'value' in request.data:
 
                 base_url = env("PREFIX_URL")
-                key = str(uuid.uuid4())
+                key = str(uuid.uuid4())[:5]
                 value = request.data.get('value')
 
                 # check if this user has this url?

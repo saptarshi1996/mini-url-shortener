@@ -6,6 +6,7 @@ from .views import (
     RegisterApiView,
     VerifyUserAPIView,
     ResendTokenAPIView,
+    UserAPIView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("register", RegisterApiView.as_view()),
     path("verify", VerifyUserAPIView.as_view()),
     path("resend", ResendTokenAPIView.as_view()),
+    path("user", UserAPIView.as_view()),
 ]
