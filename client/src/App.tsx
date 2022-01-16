@@ -5,10 +5,10 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import { AuthNavigation, UnauthNavigation } from './components';
+import { AuthNavigation, UnauthNavigation, Navigation } from './components';
 
 import { RequireAuth, UnAuth } from "./middleware";
-import { Login, Register, Home } from "./pages";
+import { Login, Register, Home, NotFound } from "./pages";
 
 export const App: FunctionComponent = () => {
   return (
@@ -18,6 +18,7 @@ export const App: FunctionComponent = () => {
           <Route index element={<RequireAuth><><AuthNavigation /><Home /></></RequireAuth>} />
           <Route path="/auth/login" element={<UnAuth><><UnauthNavigation /><Login /></></UnAuth>} />
           <Route path="/auth/register" element={<UnAuth><><UnauthNavigation /><Register /></></UnAuth>} />
+          <Route path="/not-found" element={ <><Navigation />< NotFound /></> } />
         </Routes>
       </Router>
     </>

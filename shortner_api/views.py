@@ -31,23 +31,23 @@ class ShortnerGetView(APIView):
     """
 
     def get(self, request, id):
-        # try:
-        short_url = request.build_absolute_uri()
-        value = cache.get(short_url)
+        try:
+            short_url = request.build_absolute_uri()
+            value = cache.get(short_url)
 
-        # if not in cache update in db.
-        if not value:
-            value = UserUrl.objects.filter(short_url=short_url).only("original_url").first()
-            value = value.original_url
+            # if not in cache update in db.
+            if not value:
+                value = UserUrl.objects.filter(short_url=short_url).only("original_url").first()
+                value = value.original_url
 
-        # check in db.
-        if value:
-            UserUrl.objects.filter(short_url=short_url).update(clicks=F('clicks')+1)
-            return redirect(value)
+            # check in db.
+            if value:
+                UserUrl.objects.filter(short_url=short_url).update(clicks=F('clicks')+1)
+                return redirect(value)
 
-        return redirect(env("NOT_FOUND_URL"))
-        # except Exception as e:
-        #     return redirect(env("NOT_FOUND_URL"))
+            return redirect(env("NOT_FOUND_URL"))
+        except Exception as e:
+            return redirect(env("NOT_FOUND_URL"))
 
 
 class ShortnerAPIView(APIView, UserLinkPagination):
