@@ -52,6 +52,12 @@ class ShortnerGetView(APIView):
 
 class ShortnerAPIView(APIView, UserLinkPagination):
 
+    """[summary] Shortner operations
+
+    Returns:
+        [type]: [description]
+    """
+
     permission_classes = (IsAuthenticated, )
 
     def post(self, request):
