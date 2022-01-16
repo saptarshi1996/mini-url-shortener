@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
-from .models import UserUrl
+from .models import UserUrl, SocialMediaPlatformLink
 from .serializers import UserUrlSerializer, EditUserUrlSerializer
 
 env = environ.Env()
@@ -175,6 +175,35 @@ class ShortnerDetailView(APIView):
                     "message": serializer.error_messages,
                 }, status=status.HTTP_400_BAD_REQUEST)
             
+
+        except Exception as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SocialMediaLinkAPIView(APIView):
+
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, id):
+
+        try:
+
+            user_url = UserUrl.objects.filter(id=id).only("short_url").first()
+
+            # get all the social media links.
+            social_media_links = SocialMediaPlatformLink.objects.filter(is_active=True).only("shareable_link", "platform")
+            shareable_link_list = []
+            for link in social_media_links:
+                shareable_link_list.append({
+                    "platform": link.platform,
+                    "shareable_link": link.shareable_link.format(user_url.short_url)
+                })
+
+            return Response(data={
+                "message": "Shareable links fetched successfully",
+                "links": shareable_link_list,
+            }, status=status.HTTP_200_OK)
+
 
         except Exception as e:
             return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

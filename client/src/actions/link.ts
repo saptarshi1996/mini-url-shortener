@@ -172,10 +172,43 @@ const editUserLinkById = (editLinkObjectPayload: IUserLink) => async (dispatchEv
   }
 }
 
+const getShareableLinkForShortUrl = (id: number) => async (dispatchEvent: Dispatch) => {
+  try {
+
+    dispatchEvent({
+      type: linkConstant.GET_SHARE_LINK_OBJECT_LOADING,
+    });
+
+    const { data } = await axiosAuthPlugin.get(`/mus/share/${id}`, {
+      headers: {
+        "Authorization": localStorage.getItem('token') as string,
+      },
+    });
+
+    return dispatchEvent({
+      type: linkConstant.GET_SHARE_LINK_OBJECT_SUCCESS,
+      getShareableLinkList: data.links,
+    });
+
+  } catch (ex: any) { 
+    if (ex.response) {
+      return dispatchEvent({
+        type: linkConstant.GET_SHARE_LINK_OBJECT_FAILED,
+        ...ex.response.data,
+      });
+    } else {
+      return dispatchEvent({
+        type: linkConstant.GET_SHARE_LINK_OBJECT_FAILED,
+      });
+    }
+  }
+}
+
 export const linkActions = {
   createNewLink,
   getUserLinkList,
   getUserLinkById,
   deleteUserLinkById,
   editUserLinkById,
+  getShareableLinkForShortUrl,
 };

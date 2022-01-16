@@ -11,8 +11,14 @@ import QRCode from "react-qr-code";
 
 import { EditLink } from "./EditLink";
 import { DeleteLink } from "./DeleteLink";
+import { ShareLink } from "./ShareLink";
 
-export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
+export const UserLinkDetails: FunctionComponent = ({
+  userLinkObject,
+  getShareableLinkLoading,
+  getShareableLinkList,
+  shareLinkDispatched,
+}: any) => {
 
   const RenderUserLinkDetails = () => {
     if (userLinkObject) {
@@ -34,13 +40,20 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
             <Col lg="6">
               <Card>
                 <Card.Body>
-                  <Button onClick={() => {navigator.clipboard.writeText(userLinkObject.short_url)}} variant="danger" size="sm">Copy</Button>
+                  <Button onClick={() => { navigator.clipboard.writeText(userLinkObject.short_url) }} variant="danger" size="sm">Copy</Button>
                   &nbsp;
                   <Button size="sm" variant="danger" href={userLinkObject.short_url} target="_blank">Redirect</Button>
                   &nbsp;
+                  <ShareLink {...{
+                    id: userLinkObject.id,
+                    getShareableLinkLoading,
+                    getShareableLinkList,
+                    shareLinkDispatched,
+                  } as any} />
+                  &nbsp;
                   <EditLink {...{ userLinkObject: userLinkObject } as any} />
                   &nbsp;
-                  <DeleteLink {...{ id: userLinkObject.id } as any}/>
+                  <DeleteLink {...{ id: userLinkObject.id } as any} />
                 </Card.Body>
               </Card>
             </Col>

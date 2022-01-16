@@ -11,17 +11,28 @@ import { Loader } from "../Loader";
 
 export const RightPanel: FunctionComponent = () => {
 
-  const linkSelector: any = useSelector((state: any) => state.link);
+  const {
+    userLinkObjectLoading,
+    userLinkObject,
+    getShareableLinkLoading,
+    getShareableLinkList,
+    shareLinkDispatched,
+  }: any = useSelector((state: any) => state.link);
 
   const rightCardStyle = {
     "height": "95vh",
   };
 
   const RenderLoaderOrLinkObject = () => { 
-    if (linkSelector && linkSelector.userLinkObjectLoading) {
+    if (userLinkObjectLoading) {
       return <Loader />
     } else {
-      return <UserLinkDetails {...{ userLinkObject: linkSelector.userLinkObject } as any} />;
+      return <UserLinkDetails {...{ 
+        userLinkObject, 
+        getShareableLinkLoading,
+        getShareableLinkList,
+        shareLinkDispatched,
+      } as any} />;
     }
   }
 

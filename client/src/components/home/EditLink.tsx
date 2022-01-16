@@ -58,7 +58,7 @@ export const EditLink: FunctionComponent = ({ userLinkObject }: any) => {
       return;
     }
 
-    short_url = `http://localhost:8000/mus/sr/${short_url}`
+    short_url = `http://127.0.0.1:8000/mus/sr/${short_url}`
 
     await dispatch(linkActions.editUserLinkById({
       id: id,

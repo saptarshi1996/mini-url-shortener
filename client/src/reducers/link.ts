@@ -16,6 +16,9 @@ const initialState: Object = {
   editLinkSuccess: false,
   deleteLinkSuccess: false,
 
+  getShareableLinkLoading: false,
+  getShareableLinkList: [],
+
 };
 
 export const linkReducer = (state: Object = initialState, action: Action) => {
@@ -68,6 +71,21 @@ export const linkReducer = (state: Object = initialState, action: Action) => {
         ...state,
         userLinkObjectLoading: false,
         userLinkObject: null,
+      };
+
+    case (linkConstant.GET_SHARE_LINK_OBJECT_LOADING):
+      return {
+        ...state,
+        getShareableLinkLoading: true,
+        getShareableLinkList: [],
+      };
+
+    case (linkConstant.GET_SHARE_LINK_OBJECT_SUCCESS):
+      return {
+        ...state,
+        ...action,
+        getShareableLinkLoading: false,
+        shareLinkDispatched: true,
       };
 
     default:
