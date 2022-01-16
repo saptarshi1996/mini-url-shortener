@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import { Fragment, FunctionComponent, useState } from "react";
 import {
   Button,
   Form,
@@ -44,7 +44,7 @@ export const EditLink: FunctionComponent = ({ userLinkObject }: any) => {
 
     let { id, short_url }: { id: number, short_url: string } = editLinkModel as { id: number, short_url: string };
 
-    if (short_url.length == 0 || short_url.length > 5) {
+    if (short_url.length === 0 || short_url.length > 5) {
       console.log("error");
       setEditErrorModel(true);
       setEditErrorModelMessage('Key must be 5 characters and not blank');

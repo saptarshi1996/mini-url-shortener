@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import { Fragment, FunctionComponent, useState } from "react";
 import {
   Button,
   Modal,

@@ -8,8 +8,6 @@ import {
   Container,
 } from "react-bootstrap";
 
-import { useSelector } from "react-redux";
-
 export const Navigation: FunctionComponent = () => {
   return (
     <Navbar bg="danger" variant="dark">

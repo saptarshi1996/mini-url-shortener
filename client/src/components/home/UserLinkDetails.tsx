@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 
 import {
   Row,
@@ -14,16 +14,12 @@ import { DeleteLink } from "./DeleteLink";
 
 export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
 
-  const [ editModal, showEditModal ] = useState(false);
-  const [ deleteModal, showDeleteModal ] = useState(false);
-
   const RenderUserLinkDetails = () => {
     if (userLinkObject) {
 
       return (
 
         <>
-
           <Row>
             <Col lg="6">
               <Card>
@@ -72,7 +68,6 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
               </Card>
             </Col>
           </Row>
-
         </>
 
       );
