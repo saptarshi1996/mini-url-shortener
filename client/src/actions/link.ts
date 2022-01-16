@@ -204,6 +204,18 @@ const getShareableLinkForShortUrl = (id: number) => async (dispatchEvent: Dispat
   }
 }
 
+const showShareLinkModal = () => async (dispatchEvent: Dispatch) => {
+  return dispatchEvent({
+    type: linkConstant.SHOW_SHARE_LINK_MODAL,
+  })
+}
+
+const hideShareLinkModal = () => async (dispatchEvent: Dispatch) => {
+  return dispatchEvent({
+    type: linkConstant.HIDE_SHARE_LINK_MODAL,
+  })
+}
+
 export const linkActions = {
   createNewLink,
   getUserLinkList,
@@ -211,4 +223,6 @@ export const linkActions = {
   deleteUserLinkById,
   editUserLinkById,
   getShareableLinkForShortUrl,
+  showShareLinkModal,
+  hideShareLinkModal,
 };

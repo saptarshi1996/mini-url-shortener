@@ -19,6 +19,8 @@ const initialState: Object = {
   getShareableLinkLoading: false,
   getShareableLinkList: [],
 
+  toggleShareLinkModal: false,
+
 };
 
 export const linkReducer = (state: Object = initialState, action: Action) => {
@@ -85,8 +87,19 @@ export const linkReducer = (state: Object = initialState, action: Action) => {
         ...state,
         ...action,
         getShareableLinkLoading: false,
-        shareLinkDispatched: true,
       };
+
+      case (linkConstant.SHOW_SHARE_LINK_MODAL):
+        return {
+          ...state,
+          toggleShareLinkModal: true,
+        };
+      
+      case (linkConstant.HIDE_SHARE_LINK_MODAL):
+        return {
+          ...state,
+          toggleShareLinkModal: false,
+        };
 
     default:
       return state;

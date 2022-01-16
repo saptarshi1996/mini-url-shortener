@@ -12,19 +12,14 @@ export const ShareLink: FunctionComponent = ({
   id,
   getShareableLinkLoading,
   getShareableLinkList,
+  toggleShareLinkModal,
 }: any) => {
 
   const dispatch = useDispatch();
-  const [shareModal, setShareModal] = useState(false);
-
-  useEffect(() => {
-    if (getShareableLinkList.length > 0) {
-      setShareModal(true);
-    }
-  }, [getShareableLinkList]);
 
   const openShareLink = async () => {
-    dispatch(linkActions.getShareableLinkForShortUrl(id));
+    dispatch(linkActions.showShareLinkModal());
+    dispatch(linkActions.getShareableLinkForShortUrl(id))
   }
 
   const RenderLoaderOrShareList = () => {
@@ -50,14 +45,14 @@ export const ShareLink: FunctionComponent = ({
 
   return (
     <>
-      <Button size="sm" onClick={() => openShareLink()} variant="danger">
+      <Button type="button" size="sm" onClick={() => openShareLink()} variant="danger">
         Share
       </Button>
 
       <Fragment>
         <Modal
-          show={shareModal}
-          onHide={() => setShareModal(false)}
+          show={toggleShareLinkModal}
+          onHide={() => dispatch(linkActions.hideShareLinkModal())}
           aria-labelledby="contained-modal-title-vcenter"
         >
           <Modal.Header closeButton>

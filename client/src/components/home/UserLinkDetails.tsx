@@ -17,7 +17,7 @@ export const UserLinkDetails: FunctionComponent = ({
   userLinkObject,
   getShareableLinkLoading,
   getShareableLinkList,
-  shareLinkDispatched,
+  toggleShareLinkModal,
 }: any) => {
 
   const RenderUserLinkDetails = () => {
@@ -48,7 +48,7 @@ export const UserLinkDetails: FunctionComponent = ({
                     id: userLinkObject.id,
                     getShareableLinkLoading,
                     getShareableLinkList,
-                    shareLinkDispatched,
+                    toggleShareLinkModal,
                   } as any} />
                   &nbsp;
                   <EditLink {...{ userLinkObject: userLinkObject } as any} />
