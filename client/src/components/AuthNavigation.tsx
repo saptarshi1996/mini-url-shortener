@@ -25,9 +25,9 @@ export const AuthNavigation: FunctionComponent = () => {
   const auth: any = useSelector((state: any) => state.auth);
   const user: any = useSelector((state: any) => state.user);
 
-  const logoutUser = async (e: any) => {
+  const logoutUser = (e: any) => {
     e.preventDefault();
-    await dispatch(authActions.userLogout());
+    dispatch(authActions.userLogout());
   };
 
   const NavigateToLoginOnLogout = () => {

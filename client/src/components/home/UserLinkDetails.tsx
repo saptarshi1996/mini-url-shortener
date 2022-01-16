@@ -9,6 +9,7 @@ import {
 
 import QRCode from "react-qr-code";
 
+import { EditLink } from "./EditLink";
 import { DeleteLink } from "./DeleteLink";
 
 export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
@@ -39,7 +40,7 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
                 <Card.Body>
                   <Button onClick={() => {navigator.clipboard.writeText(userLinkObject.short_url)}} variant="danger" size="sm">Copy</Button>
                   &nbsp;
-                  <Button variant="danger" size="sm">Edit</Button>
+                  <EditLink {...{ userLinkObject: userLinkObject } as any} />
                   &nbsp;
                   <DeleteLink {...{ id: userLinkObject.id } as any}/>
                 </Card.Body>

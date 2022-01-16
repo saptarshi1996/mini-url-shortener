@@ -1,10 +1,10 @@
 export interface IUserLink { 
 
-  id: number;
-  original_url: string;
-  short_url: string;
-  created_on: string;
-  clicks: number;
+  id?: number;
+  original_url?: string;
+  short_url?: string;
+  created_on?: string;
+  clicks?: number;
 
 }
 

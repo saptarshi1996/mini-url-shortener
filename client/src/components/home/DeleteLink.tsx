@@ -13,13 +13,6 @@ export const DeleteLink: FunctionComponent = ({ id }: any) => {
 
   const [deleteModal, setDeleteModal] = useState(false);
 
-  // useEffect(() => {
-
-  //   if (addLinkSuccess)
-  //     setDeleteModal(false)
-
-  // }, [addLinkSuccess]);
-
   const submitDeleteLink = async (e: any) => {
     e.preventDefault();
     await dispatch(linkActions.deleteUserLinkById(id));

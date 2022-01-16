@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 
 import { axiosAuthPlugin } from "../plugins";
 import { linkConstant } from "../constants";
+import { IUserLink } from "../interfaces";
 
 const createNewLink = (value: string) => async (dispatchEvent: Dispatch) => {
   try {
@@ -138,9 +139,43 @@ const deleteUserLinkById = (id: number) => async (dispatchEvent: Dispatch) => {
   }
 }
 
+const editUserLinkById = (editLinkObjectPayload: IUserLink) => async (dispatchEvent: Dispatch) => {
+  try { 
+
+    dispatchEvent({
+      type: linkConstant.EDIT_USER_LINK_OBJECT_LOADING,
+    });
+
+    await axiosAuthPlugin.put(`/mus/shortner/${editLinkObjectPayload.id}`, {
+      short_url: editLinkObjectPayload.short_url,
+    }, {
+      headers: {
+        "Authorization": localStorage.getItem('token') as string,
+      },
+    });
+
+    return dispatchEvent({
+      type: linkConstant.EDIT_USER_LINK_OBJECT_SUCCESS,
+    })
+
+  } catch (ex: any) {
+    if (ex.response) {
+      return dispatchEvent({
+        type: linkConstant.EDIT_USER_LINK_OBJECT_FAILED,
+        ...ex.response.data,
+      });
+    } else {
+      return dispatchEvent({
+        type: linkConstant.EDIT_USER_LINK_OBJECT_FAILED,
+      });
+    }
+  }
+}
+
 export const linkActions = {
   createNewLink,
   getUserLinkList,
   getUserLinkById,
   deleteUserLinkById,
+  editUserLinkById,
 };

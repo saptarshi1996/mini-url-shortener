@@ -8,3 +8,10 @@ class UserUrlSerializer(ModelSerializer):
     class Meta:
         model = UserUrl
         fields = ['id', 'original_url', 'short_url', 'clicks', 'created_at']
+
+
+class EditUserUrlSerializer(ModelSerializer):
+
+    class Meta: 
+        model = UserUrl
+        fields = ['short_url']

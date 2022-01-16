@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Form, ListGroup, Badge, Col, Row } from "react-bootstrap";
+import { ListGroup, Badge } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 
 import { linkActions } from "../../actions";
@@ -12,7 +12,7 @@ export const ListLink: FunctionComponent = ({ userLinkList, paginationCursors }:
   const dispatch = useDispatch();
 
   const getLinkDetails = async (key: IUserLink) => {
-    await dispatch(linkActions.getUserLinkById(key.id));
+    await dispatch(linkActions.getUserLinkById(key.id as number));
   }
 
   const RenderListGroup = (props: any) => {
@@ -22,7 +22,7 @@ export const ListLink: FunctionComponent = ({ userLinkList, paginationCursors }:
         key={index}
         className="d-flex justify-content-between align-items-start"
       >
-        {key.id + 1}.
+        {+(key.id as number) + 1}.
         <div onClick={() => getLinkDetails(key)} style={{ "cursor": "pointer" }} className="ms-2 me-auto">
           <div className="fw-bold" style={{ "wordWrap": "break-word" }}>
             {key.original_url && key.original_url.length > 100 ? key.original_url.substring(0, 100) + "..." : key.original_url}

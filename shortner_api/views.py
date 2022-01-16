@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
 from .models import UserUrl
-from .serializers import UserUrlSerializer
+from .serializers import UserUrlSerializer, EditUserUrlSerializer
 
 env = environ.Env()
 environ.Env.read_env()
@@ -21,7 +21,6 @@ environ.Env.read_env()
 # Custom pagination class.
 class UserLinkPagination(PageNumberPagination):
     page_size = 10
-    # page_size_query_param = 'page'
 
 
 # Create your views here.
@@ -133,5 +132,27 @@ class ShortnerDetailView(APIView):
                 "message": "User url deleted successfully",
             }, status=status.HTTP_200_OK)
         
+        except Exception as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def put(self, request, id):
+
+        try:
+
+            serializer = EditUserUrlSerializer(data=request.data)
+            # update the link after getting the required data.
+
+            if serializer.is_valid():
+                short_url = request.data.get('short_url')
+                UserUrl.objects.filter(id=id).update(short_url=short_url)
+                return Response(data={
+                    "message": "User url updated succcessfully",
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response(data={
+                    "message": serializer.error_messages,
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+
         except Exception as e:
             return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
