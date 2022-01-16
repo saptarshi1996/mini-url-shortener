@@ -122,3 +122,16 @@ class ShortnerDetailView(APIView):
 
         except Exception as e:
             return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def delete(self, request, id):
+
+        try:
+
+            UserUrl.objects.filter(id=id).delete()
+
+            return Response(data={
+                "message": "User url deleted successfully",
+            }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

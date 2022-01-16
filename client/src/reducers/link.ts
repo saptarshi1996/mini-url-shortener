@@ -3,13 +3,18 @@ import { Action } from "redux";
 import { linkConstant } from "../constants";
 
 const initialState: Object = {
+  
   userLinkList: [],
   linkCursors: null,
+
   userLinkLoading: false,
   addLinkSuccess: false,
 
   userLinkObjectLoading: false,
   userLinkObject: null,
+
+  editLinkSuccess: false,
+  deleteLinkSuccess: false,
 
 };
 

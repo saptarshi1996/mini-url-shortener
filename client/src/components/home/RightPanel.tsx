@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 import { UserLinkDetails } from "./UserLinkDetails";
 import { Loader } from "../Loader";
-import { IUserLink } from "../../interfaces";
 
 export const RightPanel: FunctionComponent = () => {
 

@@ -40,7 +40,7 @@ const getUserLinkList = (page?: string) => async (dispatchEvent: Dispatch) => {
     });
 
     let query = ``;
-    if (page) { 
+    if (page) {
       query += `?${page}`;
     }
 
@@ -93,7 +93,7 @@ const getUserLinkById = (id: number) => async (dispatchEvent: Dispatch) => {
       userLinkObject: data.user_url,
     });
 
-  } catch (ex: any) { 
+  } catch (ex: any) {
     if (ex.response) {
       return dispatchEvent({
         type: linkConstant.FETCH_USER_LINK_OBJECT_FAILED,
@@ -107,8 +107,40 @@ const getUserLinkById = (id: number) => async (dispatchEvent: Dispatch) => {
   }
 }
 
+const deleteUserLinkById = (id: number) => async (dispatchEvent: Dispatch) => {
+  try {
+
+    dispatchEvent({
+      type: linkConstant.DELETE_USER_LINK_OBJECT_LOADING,
+    });
+
+    await axiosAuthPlugin.delete(`/mus/shortner/${id}`, {
+      headers: {
+        "Authorization": localStorage.getItem('token') as string,
+      }
+    });
+
+    return dispatchEvent({
+      type: linkConstant.DELETE_USER_LINK_OBJECT_SUCCESS,
+    });
+
+  } catch (ex: any) {
+    if (ex.response) {
+      return dispatchEvent({
+        type: linkConstant.DELETE_USER_LINK_OBJECT_FAILED,
+        ...ex.response.data,
+      });
+    } else {
+      return dispatchEvent({
+        type: linkConstant.DELETE_USER_LINK_OBJECT_FAILED,
+      });
+    }
+  }
+}
+
 export const linkActions = {
   createNewLink,
   getUserLinkList,
   getUserLinkById,
+  deleteUserLinkById,
 };

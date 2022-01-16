@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 
 import {
   Row,
@@ -9,7 +9,12 @@ import {
 
 import QRCode from "react-qr-code";
 
+import { DeleteLink } from "./DeleteLink";
+
 export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
+
+  const [ editModal, showEditModal ] = useState(false);
+  const [ deleteModal, showDeleteModal ] = useState(false);
 
   const RenderUserLinkDetails = () => {
     if (userLinkObject) {
@@ -32,11 +37,11 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
             <Col lg="6">
               <Card>
                 <Card.Body>
-                  <Button variant="danger" size="sm">Copy</Button>
+                  <Button onClick={() => {navigator.clipboard.writeText(userLinkObject.short_url)}} variant="danger" size="sm">Copy</Button>
                   &nbsp;
                   <Button variant="danger" size="sm">Edit</Button>
                   &nbsp;
-                  <Button variant="danger" size="sm">Delete</Button>
+                  <DeleteLink {...{ id: userLinkObject.id } as any}/>
                 </Card.Body>
               </Card>
             </Col>
@@ -46,7 +51,7 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
             <Col lg="12">
               <Card>
                 <Card.Body>
-                  <Card.Title>Original Url</Card.Title>
+                  <Card.Title>Original Link</Card.Title>
                   <hr></hr>
                   {userLinkObject.original_url}
                 </Card.Body>
@@ -60,13 +65,6 @@ export const UserLinkDetails: FunctionComponent = ({ userLinkObject }: any) => {
                   <div className="text-center">
                     <QRCode value={userLinkObject.short_url} />
                   </div>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg="12">
-              <Card>
-                <Card.Body>
-                  <Card.Title>Statistics</Card.Title>
                 </Card.Body>
               </Card>
             </Col>
