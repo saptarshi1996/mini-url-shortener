@@ -26,14 +26,19 @@ class UserLinkPagination(PageNumberPagination):
 # Create your views here.
 class ShortnerGetView(APIView):
 
-    def get(self, request, id):
+    """[summary]
+    This is the redirect url which will redirect the user to the original url.
+    """
 
+    def get(self, request, id):
+        # try:
         short_url = request.build_absolute_uri()
         value = cache.get(short_url)
 
         # if not in cache update in db.
         if not value:
-            value = UserUrl.objects.filter(short_url=short_url).first()
+            value = UserUrl.objects.filter(short_url=short_url).only("original_url").first()
+            value = value.original_url
 
         # check in db.
         if value:
@@ -41,6 +46,8 @@ class ShortnerGetView(APIView):
             return redirect(value)
 
         return redirect(env("NOT_FOUND_URL"))
+        # except Exception as e:
+        #     return redirect(env("NOT_FOUND_URL"))
 
 
 class ShortnerAPIView(APIView, UserLinkPagination):
@@ -143,11 +150,20 @@ class ShortnerDetailView(APIView):
             # update the link after getting the required data.
 
             if serializer.is_valid():
+                
                 short_url = request.data.get('short_url')
-                UserUrl.objects.filter(id=id).update(short_url=short_url)
+                user_exists = UserUrl.objects.filter(id=id)
+                
+                original_url: str = user_exists.only('original_url').first()
+                user_exists.update(short_url=short_url)
+
+                # update redis as well.
+                cache.set(short_url, original_url.original_url, timeout=None)
+                
                 return Response(data={
                     "message": "User url updated succcessfully",
                 }, status=status.HTTP_200_OK)
+            
             else:
                 return Response(data={
                     "message": serializer.error_messages,

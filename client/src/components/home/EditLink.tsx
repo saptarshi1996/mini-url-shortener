@@ -42,7 +42,7 @@ export const EditLink: FunctionComponent = ({ userLinkObject }: any) => {
 
     e.preventDefault();
 
-    const { id, short_url }: { id: number, short_url: string } = editLinkModel as { id: number, short_url: string };
+    let { id, short_url }: { id: number, short_url: string } = editLinkModel as { id: number, short_url: string };
 
     if (short_url.length == 0 || short_url.length > 5) {
       console.log("error");
@@ -58,12 +58,14 @@ export const EditLink: FunctionComponent = ({ userLinkObject }: any) => {
       return;
     }
 
-    dispatch(linkActions.editUserLinkById({
+    short_url = `http://localhost:8000/mus/sr/${short_url}`
+
+    await dispatch(linkActions.editUserLinkById({
       id: id,
       short_url: short_url,
     } as IUserLink));
 
-    // await dispatch(linkActions.getUserLinkList());
+    await dispatch(linkActions.getUserLinkList());
 
   }
 
