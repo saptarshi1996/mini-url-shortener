@@ -18,11 +18,12 @@ const fetchUserDetails = () => async (dispatchEvent: Dispatch) => {
 
     } else {
 
-      const { data } = await axiosAuthPlugin.get('/auth/user', {
+      const { data } = await axiosAuthPlugin.get('/user/user-profile', {
         headers: {
           "Authorization": localStorage.getItem('token') as string,
         }
       });
+
       localStorage.setItem('user', JSON.stringify(data.user));
 
       // return response.
