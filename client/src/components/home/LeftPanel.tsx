@@ -16,7 +16,7 @@ export const LeftPanel: FunctionComponent = () => {
 
   useEffect(() => {
     dispatch(linkActions.getUserLinkList());
-  }, []);
+  }, [dispatch]);
 
   const cardStyle = {
     "height": "95vh",

@@ -44,7 +44,7 @@ class ShortnerGetView(APIView):
         return redirect(env("NOT_FOUND_URL"))
 
 
-class ShortnerPostView(APIView, UserLinkPagination):
+class ShortnerAPIView(APIView, UserLinkPagination):
 
     permission_classes = (IsAuthenticated, )
 
@@ -98,6 +98,26 @@ class ShortnerPostView(APIView, UserLinkPagination):
             return Response(data={
                 "message": "User link fetched successfully",
                 "result": paginated_result,
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ShortnerDetailView(APIView):
+
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, id):
+
+        try:
+
+            user_url = UserUrl.objects.filter(id=id).only('id', 'original_url', 'short_url', 'clicks', 'created_at').first()
+            serializer = UserUrlSerializer(user_url)
+
+            return Response(data={
+                "message": "User url fetched successfully",
+                "user_url": serializer.data,
             }, status=status.HTTP_200_OK)
 
         except Exception as e:

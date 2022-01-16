@@ -1,15 +1,18 @@
 import { FunctionComponent } from "react";
 import { Form, ListGroup, Badge, Col, Row } from "react-bootstrap";
-import { IUserLink } from "../../interfaces";
+import { useDispatch } from "react-redux";
 
+import { linkActions } from "../../actions";
+
+import { IUserLink } from "../../interfaces";
 import { Paginator } from "../Paginator";
 
 export const ListLink: FunctionComponent = ({ userLinkList, paginationCursors }: any) => {
 
-  const listGroupEntries = [];
+  const dispatch = useDispatch();
 
-  const getLinkDetails = (id: number) => {
-    console.log(id);
+  const getLinkDetails = async (key: IUserLink) => {
+    await dispatch(linkActions.getUserLinkById(key.id));
   }
 
   const RenderListGroup = (props: any) => {
@@ -19,13 +22,8 @@ export const ListLink: FunctionComponent = ({ userLinkList, paginationCursors }:
         key={index}
         className="d-flex justify-content-between align-items-start"
       >
-        <Form.Check
-          type="checkbox"
-          id={`checkbox-${index}`}
-          label=""
-          isInvalid
-        />
-        <div style={{ "cursor": "pointer" }} className="ms-2 me-auto">
+        {key.id + 1}.
+        <div onClick={() => getLinkDetails(key)} style={{ "cursor": "pointer" }} className="ms-2 me-auto">
           <div className="fw-bold" style={{ "wordWrap": "break-word" }}>
             {key.original_url && key.original_url.length > 100 ? key.original_url.substring(0, 100) + "..." : key.original_url}
           </div>
