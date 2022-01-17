@@ -17,6 +17,8 @@ export const RightPanel: FunctionComponent = () => {
     getShareableLinkLoading,
     getShareableLinkList,
     toggleShareLinkModal,
+    statisticsChart,
+    noDataInChart,
   }: any = useSelector((state: any) => state.link);
 
   const rightCardStyle = {
@@ -32,6 +34,8 @@ export const RightPanel: FunctionComponent = () => {
         getShareableLinkLoading,
         getShareableLinkList,
         toggleShareLinkModal,
+        statisticsChart,
+        noDataInChart,
       } as any} />;
     }
   }

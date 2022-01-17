@@ -7,7 +7,7 @@ class UserUrlSerializer(ModelSerializer):
 
     class Meta:
         model = UserUrl
-        fields = ['id', 'original_url', 'short_url', 'clicks', 'created_at']
+        fields = ['id', 'original_url', 'short_url', 'clicks', 'created_at', 'facebook_click', 'twitter_click', 'linkedin_click', 'whatsapp_click']
 
 
 class EditUserUrlSerializer(ModelSerializer):

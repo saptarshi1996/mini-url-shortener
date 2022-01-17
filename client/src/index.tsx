@@ -1,3 +1,6 @@
+import {Chart, ArcElement, Tooltip, Legend} from 'chart.js'
+
+
 import ReactDOM from 'react-dom';
 import { App } from './App';
 
@@ -9,6 +12,8 @@ import thunkMiddleware from 'redux-thunk';
 import { applyMiddleware, createStore } from 'redux';
 
 import rootReducer from './reducers';
+
+Chart.register(ArcElement, Tooltip, Legend);
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 

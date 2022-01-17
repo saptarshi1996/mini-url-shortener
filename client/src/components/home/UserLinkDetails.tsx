@@ -8,6 +8,7 @@ import {
 } from "react-bootstrap";
 
 import QRCode from "react-qr-code";
+import { Doughnut } from 'react-chartjs-2';
 
 import { EditLink } from "./EditLink";
 import { DeleteLink } from "./DeleteLink";
@@ -18,13 +19,32 @@ export const UserLinkDetails: FunctionComponent = ({
   getShareableLinkLoading,
   getShareableLinkList,
   toggleShareLinkModal,
+  statisticsChart,
+  noDataInChart,
 }: any) => {
+
+  const RenderDoughnutOrMessage = () => {
+    if (noDataInChart) {
+      return (
+        <>Share link to view chart data</>
+      );
+    } else {
+      return (
+        <>
+          <Doughnut
+            options={{
+              aspectRatio: 0
+            }}
+            data={statisticsChart}
+          />
+        </>
+      );
+    }
+  }
 
   const RenderUserLinkDetails = () => {
     if (userLinkObject) {
-
       return (
-
         <>
           <Row>
             <Col lg="6">
@@ -80,11 +100,20 @@ export const UserLinkDetails: FunctionComponent = ({
                 </Card.Body>
               </Card>
             </Col>
+            <Col lg="12">
+              <Card>
+                <Card.Body>
+                  <Card.Title>Statistics</Card.Title>
+                  <hr></hr>
+                  <div className="text-center">
+                    <RenderDoughnutOrMessage />
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
           </Row>
         </>
-
       );
-
     } else {
       return <>Click on a link to get details</>;
     }

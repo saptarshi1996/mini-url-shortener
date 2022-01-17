@@ -12,6 +12,8 @@ const initialState: Object = {
 
   userLinkObjectLoading: false,
   userLinkObject: null,
+  statisticsChart: {},
+  noDataInChart: true,
 
   editLinkSuccess: false,
   deleteLinkSuccess: false,

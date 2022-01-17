@@ -27,6 +27,7 @@ class SocialMediaPlatformLink(models.Model):
 
     shareable_link = models.TextField()
     platform = models.CharField(max_length=100)
+    rgb_code = models.CharField(max_length=100, default=None)
 
     is_active = models.BooleanField(default=False)
 

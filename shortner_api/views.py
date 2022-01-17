@@ -102,7 +102,7 @@ class ShortnerAPIView(APIView, UserLinkPagination):
 
         try:
 
-            user_url = UserUrl.objects.filter(user=request.user).only('id', 'original_url', 'short_url', 'clicks', 'created_at')
+            user_url = UserUrl.objects.filter(user=request.user)
             results = self.paginate_queryset(user_url, request, view=self)
             serializer = UserUrlSerializer(results, many=True)
             paginated_result = self.get_paginated_response(serializer.data).data
@@ -124,12 +124,39 @@ class ShortnerDetailView(APIView):
 
         try:
 
-            user_url = UserUrl.objects.filter(id=id).only('id', 'original_url', 'short_url', 'clicks', 'created_at').first()
+            user_url = UserUrl.objects.filter(id=id).first()
             serializer = UserUrlSerializer(user_url)
+
+            social_media_links = SocialMediaPlatformLink.objects.all()
+
+            label_list = ['Click']
+            data_list = [user_url.clicks]
+            bg_list = ['rgb(170, 184, 194)']
+
+            for link in social_media_links:
+                lower_case_platform = link.platform.lower()+"_click"
+                label_list.append(link.platform)
+                bg_list.append(link.rgb_code)
+                data_list.append(serializer.data[lower_case_platform])
+                
+
+            chart_payload = {       
+                "labels": label_list,
+                "datasets": [{
+                    "label": 'Link statistics',
+                    "data": data_list,
+                    "backgroundColor": bg_list,
+                }],
+            }
+
+            # all items in data_list are 0
+            no_data = True if data_list.count(0) == len(data_list) else False
 
             return Response(data={
                 "message": "User url fetched successfully",
                 "user_url": serializer.data,
+                "chart_payload": chart_payload,
+                "no_data": no_data,
             }, status=status.HTTP_200_OK)
 
         except Exception as e:

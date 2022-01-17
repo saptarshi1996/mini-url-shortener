@@ -92,6 +92,8 @@ const getUserLinkById = (id: number) => async (dispatchEvent: Dispatch) => {
     return dispatchEvent({
       type: linkConstant.FETCH_USER_LINK_OBJECT_SUCCESS,
       userLinkObject: data.user_url,
+      statisticsChart: data.chart_payload,
+      noDataInChart: data.no_data,
     });
 
   } catch (ex: any) {
