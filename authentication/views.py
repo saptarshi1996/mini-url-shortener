@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 
 
 from users.models import UserProfile, UserVerification
@@ -78,7 +77,7 @@ class RegisterApiView(APIView):
 
             if serializer.is_valid():
 
-                email: str = request.data.get('email')
+                email = request.data.get('email')
 
                 # check if the user already exists?
                 user_exists = UserProfile.objects.filter(email=email).only('id').first()

@@ -46,7 +46,7 @@ const userRegister = (register: RegisterInterface) => async (dispatchEvent: Disp
       ...data,
     });
 
-  } catch (ex: any) { 
+  } catch (ex: any) {
     if (ex.response) {
       return dispatchEvent({
         type: authConstant.USER_REGISTER_FAILED,
@@ -60,14 +60,14 @@ const userRegister = (register: RegisterInterface) => async (dispatchEvent: Disp
   }
 }
 
-const userLogout = () => (dispatchEvent: Dispatch) => { 
+const userLogout = () => (dispatchEvent: Dispatch) => {
   localStorage.clear();
   return dispatchEvent({
     type: authConstant.USER_LOGOUT_SUCCESS,
   });
 }
 
-export const authActions = { 
+export const authActions = {
   userLogin,
   userRegister,
   userLogout,

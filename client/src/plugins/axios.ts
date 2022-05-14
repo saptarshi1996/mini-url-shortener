@@ -1,14 +1,19 @@
 import * as axios from 'axios';
 
+import { Constant } from "../config";
+
 const axiosUnauthPlugin = axios.default.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: Constant.Environment.BASE_URL,
   headers: {
     'content-type': 'application/json',
-  }
+  },
 });
 
 const axiosAuthPlugin = axios.default.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: Constant.Environment.BASE_URL,
+  headers: {
+    'content-type': 'application/json',
+  },
 });
 
 export {
