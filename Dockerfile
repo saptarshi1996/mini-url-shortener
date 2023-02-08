@@ -1,1 +1,1 @@
-FROM python:3.10.0
+FROM node:18.13.0

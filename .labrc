@@ -1,0 +1,3 @@
+{
+    globals: ['__extends', '__assign', '__rest', ...]
+}
