@@ -3,9 +3,10 @@ import {
   Server,
 } from '@hapi/hapi'
 
-import * as authController from '../controllers/login.controller'
+import * as authController from '../controllers/auth.controller'
 
 import userLoginValidation from '../validations/auth/login.validation'
+import userRegisterValidation from '../validations/auth/register.validation'
 
 const tags = ['api', 'Authentication']
 
@@ -27,6 +28,17 @@ export default {
           validate: userLoginValidation,
         },
       },
+      {
+        method: 'POST',
+        path: '/auth/userRegister',
+        options: {
+          auth: false,
+          description: 'User Register',
+          tags,
+          handler: authController.userRegister,
+          validate: userRegisterValidation,
+        }
+      }
     ])
 
   },

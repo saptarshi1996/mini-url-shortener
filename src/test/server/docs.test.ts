@@ -1,13 +1,12 @@
+import { Server } from '@hapi/hapi'
+
 import Lab from '@hapi/lab'
 import { expect } from '@hapi/code'
 
 import { getServer } from '../../server/application'
-import { Server } from '@hapi/hapi'
 
 const lab = Lab.script()
 const { describe, it, beforeEach, afterEach } = lab
-
-export { lab }
 
 describe('GET /swagger', () => {
   let server: Server
@@ -29,3 +28,5 @@ describe('GET /swagger', () => {
     expect(res.statusCode).to.equal(200)
   })
 })
+
+export { lab }

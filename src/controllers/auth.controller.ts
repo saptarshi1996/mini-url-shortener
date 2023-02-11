@@ -65,6 +65,10 @@ export async function userRegister(req: Request) {
       return new BadRequestError('User already exists')
     }
 
+    return {
+      'message': 'User created successfully',
+    }
+
   } catch (ex: any) {
     return new Error(ex)
   }

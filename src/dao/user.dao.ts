@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
+import IUser from '../interfaces/models/user.interface'
+
 const {
   user: User,
   userVerification: UserVerification,
@@ -17,7 +19,7 @@ export async function getUser({
       where,
       select,
     })
-    return Promise.resolve(userFound)
+    return Promise.resolve(userFound as IUser)
   } catch (ex: any) {
     return Promise.reject(ex)
   }

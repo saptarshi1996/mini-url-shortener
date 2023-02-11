@@ -9,6 +9,7 @@ import { version } from '../../package.json'
 import IUser from '../interfaces/models/user.interface'
 
 import authMiddleware from '../middlewares/auth.middleware'
+import responseMiddleware from '../middlewares/response.middleware'
 import routeMiddleware from '../middlewares/route.middleware'
 
 import routes from '../routes'
@@ -60,7 +61,8 @@ async function loadServer(): Promise<Server> {
   server.auth.strategy('default', 'custom')
   server.auth.default('default')
 
-  server.ext('onPreResponse', routeMiddleware)
+  server.ext('onRequest', routeMiddleware)
+  server.ext('onPreResponse', responseMiddleware)
 
   await server.register(plugins)
   await server.register(routes, {
