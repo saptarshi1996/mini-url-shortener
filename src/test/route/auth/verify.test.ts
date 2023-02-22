@@ -11,10 +11,10 @@ import * as userDao from '../../../dao/user.dao'
 const lab = Lab.script()
 const { describe, it, beforeEach, afterEach } = lab
 
-const url = '/api/auth/userRegister'
+const url = '/api/auth/verify'
 const method = 'POST'
 
-describe('POST /api/auth/userRegister', () => {
+describe('POST /api/auth/verify', () => {
   let server: Server
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('POST /api/auth/userRegister', () => {
     await server.stop()
   })
 
-  it('responds for bad payload.', async () => {
+  it('responds for bad payload', async () => {
     const res = await server.inject({
       method,
       url,
@@ -39,52 +39,73 @@ describe('POST /api/auth/userRegister', () => {
     expect(response.message).to.equal('Invalid request payload input')
   })
 
-  it('responds for user already exists.', async () => {
+  it('responds for user not found', async () => {
+
+    sinon.stub(userDao, 'getUser').resolves(undefined)
+
+    const res = await server.inject({
+      method,
+      url,
+      payload: {
+        email: 'jdoe@yopmail.com',
+        otp: 123456,
+      }
+    })
+
+    expect(res.statusCode).to.equal(404)
+
+    const response = JSON.parse(res.payload)
+    expect(response.message).to.equal('User does not exists')
+  })
+
+  it('responds for user already verified', async () => {
 
     sinon.stub(userDao, 'getUser').resolves({
       id: 1,
+      is_verified: true,
     })
 
     const res = await server.inject({
       method,
       url,
       payload: {
-        first_name: 'john',
-        last_name: 'doe',
         email: 'jdoe@yopmail.com',
-        password: '12345',
+        otp: 123456,
       }
     })
 
     expect(res.statusCode).to.equal(400)
 
     const response = JSON.parse(res.payload)
-    expect(response.message).to.equal('User already exists')
+    expect(response.message).to.equal('User already verified')
+
   })
 
-  it('responds for user created', async () => {
-    sinon.stub(userDao, 'getUser').resolves(undefined)
-    sinon.stub(userDao, 'createUser').resolves({
+  it('responds for user verification not found', async () => {
+
+    sinon.stub(userDao, 'getUser').resolves({
       id: 1,
+      is_verified: false,
     })
-    sinon.stub(userDao, 'createUserVerification').resolves(undefined)
+
+    sinon.stub(userDao, 'getUserVerification').resolves(undefined)
 
     const res = await server.inject({
       method,
       url,
       payload: {
-        first_name: 'john',
-        last_name: 'doe',
         email: 'jdoe@yopmail.com',
-        password: '12345',
+        otp: 123456,
       }
     })
 
-    expect(res.statusCode).to.equal(200)
+    expect(res.statusCode).to.equal(400)
 
     const response = JSON.parse(res.payload)
-    expect(response.message).to.equal('User created successfully')
+    expect(response.message).to.equal('User verification not valid')
+
   })
+
 })
 
 export { lab }

@@ -37,7 +37,7 @@ model UserVerification {
   is_expired Boolean? @default(false)
 
   expires_at DateTime
-  created_at DateTime @default(now())
+  created_at DateTime
   updated_at DateTime?
   deleted_at DateTime?
 
@@ -45,4 +45,7 @@ model UserVerification {
   user User @relation(fields: [user_id], references: [id])
 
   @@map("user_verifications")
+
+  @@index([user_id, otp])
+  @@index([user_id])
 }

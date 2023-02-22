@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
 import IUser from '../interfaces/models/user.interface'
+import IUserVerification from '../interfaces/models/user-verification.interface'
 
 const {
   user: User,
@@ -15,11 +16,11 @@ export async function getUser({
   where: any,
 }) {
   try {
-    const userFound = await User.findFirst({
+    const found = await User.findFirst({
       where,
       select,
     })
-    return Promise.resolve(userFound as IUser)
+    return Promise.resolve(found as IUser)
   } catch (ex: any) {
     return Promise.reject(ex)
   }
@@ -31,11 +32,11 @@ export async function createUser({
   data: any,
 }) {
   try {
-    const userCreated = await User.create({
+    const created = await User.create({
       data,
     })
 
-    return Promise.resolve(userCreated)
+    return Promise.resolve(created as IUser)
   } catch (ex: any) {
     return Promise.reject(ex)
   }
@@ -51,7 +52,7 @@ export async function updateUser({
   many: boolean,
 }) {
   try {
-    const userUpdated = many ? User.updateMany({
+    const updated = many ? User.updateMany({
       where,
       data,
     }) : User.update({
@@ -59,7 +60,7 @@ export async function updateUser({
       data,
     })
 
-    return Promise.resolve(userUpdated)
+    return Promise.resolve(updated)
   } catch (ex: any) {
     return Promise.reject(ex)
   }
@@ -74,12 +75,12 @@ export async function deleteUser({
 }) {
   try {
 
-    const userDeleted = many ? User.deleteMany({
+    const deleted = many ? User.deleteMany({
       where,
     }) : User.delete({
       where,
     })
-    return Promise.resolve(userDeleted)
+    return Promise.resolve(deleted)
 
   } catch (ex: any) {
     return Promise.reject(ex)
@@ -94,12 +95,52 @@ export async function getUserVerification({
   select: any,
 }) {
   try {
-    const userVerificationFound = await UserVerification.findFirst({
+    const found = await UserVerification.findFirst({
       where,
       select,
     })
 
-    return Promise.resolve(userVerificationFound)
+    return Promise.resolve(found as IUserVerification)
+  } catch (ex: any) {
+    return Promise.reject(ex)
+  }
+}
+
+export async function createUserVerification({
+  data,
+}: {
+  data: any,
+}) {
+  try {
+    const created = UserVerification.create({
+      data,
+    })
+
+    return Promise.resolve(created)
+  } catch (ex: any) {
+    return Promise.reject(ex)
+  }
+}
+
+export async function updateUserVerification({
+  where,
+  data,
+  many = false,
+}: {
+  where: any,
+  data: any,
+  many: boolean,
+}) {
+  try {
+    const updated = many ? UserVerification.updateMany({
+      where,
+      data,
+    }) : UserVerification.update({
+      where,
+      data,
+    })
+
+    return Promise.resolve(updated)
   } catch (ex: any) {
     return Promise.reject(ex)
   }
