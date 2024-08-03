@@ -6,6 +6,7 @@ import {
 } from 'express'
 
 import logger from '../config/logger'
+
 import NotFoundError from '../exceptions/not-found'
 
 const Application = async () => {
