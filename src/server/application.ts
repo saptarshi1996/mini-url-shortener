@@ -1,4 +1,5 @@
-import express, {
+import express from 'express'
+import {
   type Request,
   type Response,
   type NextFunction
