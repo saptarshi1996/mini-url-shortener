@@ -1,0 +1,20 @@
+{
+  "name": "mini-url-shortener",
+  "version": "1.0.0",
+  "description": "An in-memory url shortener built using django and redis with a react based UI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saptarshi1996/mini-url-shortener.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saptarshi1996/mini-url-shortener/issues"
+  },
+  "homepage": "https://github.com/saptarshi1996/mini-url-shortener#readme"
+}
