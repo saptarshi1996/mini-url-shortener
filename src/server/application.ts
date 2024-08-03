@@ -9,6 +9,8 @@ import logger from '../config/logger'
 
 import NotFoundError from '../exceptions/not-found'
 
+import authRouter from '../routes/auth'
+
 const Application = async () => {
   const app = express()
 
@@ -16,6 +18,8 @@ const Application = async () => {
     extended: false
   }))
   app.use(express.json())
+
+  app.use('/auth', authRouter)
 
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     logger.error(err.stack)

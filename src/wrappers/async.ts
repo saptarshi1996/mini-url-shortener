@@ -4,16 +4,16 @@ import {
   type NextFunction
 } from 'express'
 
-// Type for route handler
-type RouteHandler = (req: Request, res: Response, next?: NextFunction) => Promise<void> | void
+import logger from '../config/logger'
 
-// Wrapper function
-export default function (handler: RouteHandler) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+export default function (handler: any) {
+  return async (req: Request, res: Response, next?: NextFunction) => {
     try {
-      await handler(req, res, next)
-    } catch (error) {
-      next(error)
+      logger.info(`${req.method} :: ${req.protocol}://${req.headers.host}/${req.originalUrl}`)
+      const response = await handler(req, res, next)
+      return res.status(200).json(response)
+    } catch (error: any) {
+      return res.status(error.statusCode || 500).json({ message: error.message })
     }
   }
 }
