@@ -1,6 +1,7 @@
+import Application from './server/application'
+
 import environment from './config/environment'
 import logger from './config/logger'
-import Application from './server/application'
 
 Application().then((server) => {
   server.listen(+environment.SERVER_PORT, environment.SERVER_HOST, () => {
