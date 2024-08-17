@@ -1,4 +1,5 @@
 import { sign } from 'jsonwebtoken'
+
 import environment from '../config/environment'
 
 export const generateToken = (payload: Record<string, unknown>): string => {
