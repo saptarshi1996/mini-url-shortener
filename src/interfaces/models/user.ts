@@ -5,4 +5,7 @@ export default interface IUser {
   email?: string
   password?: string
   is_verified?: boolean
+  created_at?: string
+  updated_at?: string
+  deleted_at?: string
 }

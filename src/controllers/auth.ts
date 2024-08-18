@@ -20,6 +20,7 @@ import NotFoundError from '../exceptions/not-found'
 import ForbiddenError from '../exceptions/forbidden'
 
 import type IUser from '../interfaces/models/user'
+import type IUserVerification from '../interfaces/models/user-verification'
 
 export const userLogin = async (req: Request) => {
   const loginPayload = req.body as {
@@ -99,7 +100,7 @@ export const userRegister = async (req: Request) => {
     user_id: newUser.id,
     created_at: createdAt,
     expired_at: expiredAt
-  })
+  }) as IUserVerification
 
   logger.info(userVerificationCreated)
 
@@ -141,20 +142,20 @@ export const verifyUser = async (req: Request) => {
       id: true,
       expires_at: true
     }
-  })
+  }) as IUserVerification
 
   if (!userVerificationExists) {
     throw new ForbiddenError('Invalid verification request')
   }
 
   const currentTime = new Date()
-  const expiredAt = new Date(userVerificationExists.expires_at)
+  const expiredAt = new Date(userVerificationExists.expired_at as string)
   if (currentTime > expiredAt) {
     throw new ForbiddenError('Token expired.')
   }
 
   await updateUserVerificationByIdToDB({
-    id: userVerificationExists.id,
+    id: userVerificationExists.id as number,
     data: {
       is_revoked: true,
       is_expired: true
@@ -208,7 +209,7 @@ export const resendToken = async (req: Request) => {
     user_id: userExists.id,
     created_at: createdAt,
     expired_at: expiredAt
-  })
+  }) as IUserVerification
 
   logger.info(userVerificationCreated)
 
