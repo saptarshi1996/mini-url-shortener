@@ -3,11 +3,17 @@ import { Router } from 'express'
 import wrapper from '../wrappers/async'
 
 import {
-  userLogin
+  resendToken,
+  userLogin,
+  userRegister,
+  verifyUser
 } from '../controllers/auth'
 
 const router = Router()
 
-router.get('/login', wrapper(userLogin))
+router.post('/login', wrapper(userLogin))
+router.post('/register', wrapper(userRegister))
+router.post('/verify', wrapper(verifyUser))
+router.post('/resend', wrapper(resendToken))
 
 export default router
