@@ -22,6 +22,8 @@ model User {
 
   mobile String? @db.VarChar(100)
 
+  is_verified Boolean? @default(false)
+
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
   deleted_at DateTime?
