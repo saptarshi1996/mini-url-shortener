@@ -11,3 +11,5 @@ export const generateToken = (payload: Record<string, unknown>): string => {
 export const validateToken = (token: string): string => {
   return verify(token, environment.JWT_SECRET) as string
 }
+
+export const generateOtp = () => Math.floor(100000 + Math.random() * 900000)

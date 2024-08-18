@@ -4,15 +4,22 @@ import {
   createUserToDB,
   getUserFromDB
 } from '../repository/user'
+import {
+  createUserVerificationToDB,
+  getUserVerificationFromDB,
+  updateUserVerificationByIdToDB,
+  updateUserVerificationToDB
+} from '../repository/user-verification'
+
+import logger from '../config/logger'
 
 import { hashPassword, verifyPassword } from '../helpers/bcrypt'
-import { generateToken } from '../helpers/auth'
+import { generateOtp, generateToken } from '../helpers/auth'
 
 import NotFoundError from '../exceptions/not-found'
 import ForbiddenError from '../exceptions/forbidden'
 
 import type IUser from '../interfaces/models/user'
-import logger from '../config/logger'
 
 export const userLogin = async (req: Request) => {
   const loginPayload = req.body as {
@@ -66,7 +73,7 @@ export const userRegister = async (req: Request) => {
     }
   }) as IUser
 
-  if (!userExists) {
+  if (userExists) {
     throw new ForbiddenError('User already exists.')
   }
 
@@ -77,17 +84,133 @@ export const userRegister = async (req: Request) => {
     last_name: registerPayload.last_name,
     email: registerPayload.email,
     password: hash
-  })
+  }) as IUser
 
   logger.info(newUser)
+
+  const otp = generateOtp()
+
+  const createdAt = new Date()
+  const expiredAt = new Date(createdAt)
+  expiredAt.setMinutes(expiredAt.getMinutes() + 10)
+
+  const userVerificationCreated = await createUserVerificationToDB({
+    otp,
+    user_id: newUser.id,
+    created_at: createdAt,
+    expired_at: expiredAt
+  })
+
+  logger.info(userVerificationCreated)
 
   return { message: 'User registered successfully.' }
 }
 
 export const verifyUser = async (req: Request) => {
+  const verifyUserPayload = req.body as {
+    email: string
+    otp: number
+  }
 
+  const userExists = await getUserFromDB({
+    where: {
+      email: verifyUserPayload.email
+    },
+    select: {
+      id: true,
+      is_verified: true
+    }
+  }) as IUser
+
+  if (!userExists) {
+    throw new NotFoundError('User does not exists.')
+  }
+
+  if (userExists.is_verified) {
+    throw new ForbiddenError('User already verified.')
+  }
+
+  const userVerificationExists = await getUserVerificationFromDB({
+    where: {
+      user_id: userExists.id,
+      otp: verifyUserPayload.otp,
+      is_expired: true,
+      is_revoked: true
+    },
+    select: {
+      id: true,
+      expires_at: true
+    }
+  })
+
+  if (!userVerificationExists) {
+    throw new ForbiddenError('Invalid verification request')
+  }
+
+  const currentTime = new Date()
+  const expiredAt = new Date(userVerificationExists.expires_at)
+  if (currentTime > expiredAt) {
+    throw new ForbiddenError('Token expired.')
+  }
+
+  await updateUserVerificationByIdToDB({
+    id: userVerificationExists.id,
+    data: {
+      is_revoked: true,
+      is_expired: true
+    }
+  })
+
+  return { message: 'User verified successfully' }
 }
 
 export const resendToken = async (req: Request) => {
+  const resendTokenPayload = req.body as {
+    email: string
+  }
 
+  const userExists = await getUserFromDB({
+    where: {
+      email: resendTokenPayload.email
+    },
+    select: {
+      id: true,
+      is_verified: true
+    }
+  }) as IUser
+
+  if (!userExists) {
+    throw new NotFoundError('User does not exists.')
+  }
+
+  if (userExists.is_verified) {
+    throw new ForbiddenError('User already verified.')
+  }
+
+  await updateUserVerificationToDB({
+    where: {
+      user_id: userExists.id
+    },
+    data: {
+      is_revoked: true,
+      is_expired: true
+    }
+  })
+
+  const otp = generateOtp()
+
+  const createdAt = new Date()
+  const expiredAt = new Date(createdAt)
+  expiredAt.setMinutes(expiredAt.getMinutes() + 10)
+
+  const userVerificationCreated = await createUserVerificationToDB({
+    otp,
+    user_id: userExists.id,
+    created_at: createdAt,
+    expired_at: expiredAt
+  })
+
+  logger.info(userVerificationCreated)
+
+  return { message: 'Otp sent successfully' }
 }

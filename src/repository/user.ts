@@ -16,5 +16,5 @@ export const getUserFromDB = async ({
 }
 
 export const createUserToDB = async (payload: any) => {
-  return await User.create({ data: payload })
+  return await User.create({ data: payload, select: { id: true } })
 }
