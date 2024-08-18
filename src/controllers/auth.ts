@@ -1,15 +1,18 @@
 import { type Request } from 'express'
 
 import {
+  createUserToDB,
   getUserFromDB
 } from '../repository/user'
 
-import NotFoundError from '../exceptions/not-found'
-import ForbiddenError from '../exceptions/forbidden'
+import { hashPassword, verifyPassword } from '../helpers/bcrypt'
 import { generateToken } from '../helpers/auth'
 
+import NotFoundError from '../exceptions/not-found'
+import ForbiddenError from '../exceptions/forbidden'
+
 import type IUser from '../interfaces/models/user'
-import { verifyPassword } from '../helpers/bcrypt'
+import logger from '../config/logger'
 
 export const userLogin = async (req: Request) => {
   const loginPayload = req.body as {
@@ -47,7 +50,38 @@ export const userLogin = async (req: Request) => {
 }
 
 export const userRegister = async (req: Request) => {
-  return { message: 'User registered successfully' }
+  const registerPayload = req.body as {
+    first_name: string
+    last_name: string
+    email: string
+    password: string
+  }
+
+  const userExists = await getUserFromDB({
+    where: {
+      email: registerPayload.email
+    },
+    select: {
+      id: true
+    }
+  }) as IUser
+
+  if (!userExists) {
+    throw new ForbiddenError('User already exists.')
+  }
+
+  const hash = hashPassword(registerPayload.password)
+
+  const newUser = await createUserToDB({
+    first_name: registerPayload.first_name,
+    last_name: registerPayload.last_name,
+    email: registerPayload.email,
+    password: hash
+  })
+
+  logger.info(newUser)
+
+  return { message: 'User registered successfully.' }
 }
 
 export const verifyUser = async (req: Request) => {

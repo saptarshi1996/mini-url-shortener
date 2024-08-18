@@ -14,3 +14,7 @@ export const getUserFromDB = async ({
     select
   })
 }
+
+export const createUserToDB = async (payload: any) => {
+  return await User.create({ data: payload })
+}
