@@ -2,7 +2,8 @@ import { type Request } from 'express'
 
 import {
   createUserToDB,
-  getUserFromDB
+  getUserFromDB,
+  updateUserByIdToDB
 } from '../repository/user'
 import {
   createUserVerificationToDB,
@@ -159,6 +160,13 @@ export const verifyUser = async (req: Request) => {
     data: {
       is_revoked: true,
       is_expired: true
+    }
+  })
+
+  await updateUserByIdToDB({
+    id: userExists.id as number,
+    data: {
+      is_verified: true
     }
   })
 

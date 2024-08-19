@@ -18,3 +18,16 @@ export const getUserFromDB = async ({
 export const createUserToDB = async (payload: any) => {
   return await User.create({ data: payload, select: { id: true } })
 }
+
+export const updateUserByIdToDB = async ({
+  id,
+  data
+}: {
+  id: number
+  data: any
+}) => {
+  return await User.update({
+    where: { id },
+    data
+  })
+}
