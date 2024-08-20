@@ -31,3 +31,24 @@ export const updateUserByIdToDB = async ({
     data
   })
 }
+
+export const updateUserToDB = async ({
+  where,
+  data
+}: {
+  where: any
+  data: any
+}) => {
+  return await User.update({
+    where,
+    data
+  })
+}
+
+export const createUserToDBBulk = async (payload: any[]) => {
+  return await User.createMany({ data: payload })
+}
+
+export const deleteUserByIDFromDB = async (id: number) => {
+  return await User.delete({ where: { id } })
+}
